@@ -44,15 +44,36 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
         exit;
     }#End of Null\Empty Check on Access Token
 
-    
-    ############################
-    #
-    #
-    # Make Cool API Calls Here
-    #
-    #
-    ############################
+    #Var for Individual IAM ID
+    [string]$usrIAMID = "1000011001";
 
+    #Var for Account EndPoint Uri with User IAM ID
+    $accountsUri = $UCDAPIInfo.base_url + "accounts?iamid=" + $usrIAMID;
+
+    #Var for Regular EndPoint Headers Calls
+    $headersEPCall = @{"Authorization"="Bearer " + $UCDAPIInfo.oauth_token;};
+
+    #Make Rest Call to Pull Accounts Information
+    $arrAccountInfo = Invoke-RestMethod -Uri $accountsUri -Method GET -Headers $headersEPCall;
+
+    #Check for Returned Accounts
+    if($arrAccountInfo.Count -gt 0)
+    {
+        #Loop Through Accounts Listed for Member
+        foreach($accountInfo in $arrAccountInfo)
+        {
+            #Check for the UCPath Positions
+            if($accountInfo.AccountName -eq "UCPath Position Entitlement")
+            {
+
+                foreach($ucpathPEAttribute in $accountInfo.attributes)
+                {
+                    $ucpathPEAttribute
+                }
+            }
+        }
+
+    }#End of Empty Check on $arrAccountInfo
 
 }#End of Null\Empty Checks on Client ID and Secret
 
