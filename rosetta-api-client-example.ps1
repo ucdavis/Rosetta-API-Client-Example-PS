@@ -1,7 +1,7 @@
 <#
     Title: rosetta-api-client-example.ps1
-    Authors: Dean Bunn
-    Last Edit: 2025-11-02
+    Authors: Dean Bunn and Wilson Miller
+    Last Edit: 2025-11-03
 #>
 
 #Custom Object for UC Davis API Information
@@ -11,6 +11,7 @@ $global:UCDAPIInfo = [PSCustomObject]@{
                                          client_id = ""
                                          client_secret = ""
                                          oauth_token = ""
+                                         test_id = ""
                                        }
 
 
@@ -19,6 +20,7 @@ $UCDAPIInfo.base_url = Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault U
 $UCDAPIInfo.token_url = Get-Secret -Name "Rosetta-OAuth-Url" -AsPlainText -Vault UCD-Identities;
 $UCDAPIInfo.client_id = Get-Secret -Name "Rosetta-Client-ID" -AsPlainText -Vault UCD-Identities;
 $UCDAPIInfo.client_secret = Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault UCD-Identities;
+$UCDAPIInfo.test_id = Get-Secret -Name "Rosetta-Test-ID" -AsPlainText -Vault UCD-Identities;
 
 #Check for Required Client ID and Secret Before Making API Calls
 if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNullOrEmpty($UCDAPIInfo.client_secret) -eq $false)
@@ -44,11 +46,8 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
         exit;
     }#End of Null\Empty Check on Access Token
 
-    #Var for Individual IAM ID
-    [string]$usrIAMID = "1000011001";
-
     #Var for Account EndPoint Uri with User IAM ID
-    $accountsUri = $UCDAPIInfo.base_url + "accounts?iamid=" + $usrIAMID;
+    $accountsUri = $UCDAPIInfo.base_url + "accounts?iamid=" + $UCDAPIInfo.test_id;
 
     #Var for Regular EndPoint Headers Calls
     $headersEPCall = @{"Authorization"="Bearer " + $UCDAPIInfo.oauth_token;};

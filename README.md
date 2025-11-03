@@ -1,5 +1,4 @@
-## UC Davis Rosetta API PowerShell Demo Code
+## Rosetta API Client Example
 
-A quick PowerShell project to show you how to access the Rosetta API. 
-
+A quick repository demonstrating how to access the UCD Rosetta API. Please contact the Campus Identity team to obtain the required credentials for your API account.
 
