@@ -1,7 +1,7 @@
 <#
-    Title: ucd-rosetta-api.ps1
+    Title: rosetta-api-client-example.ps1
     Authors: Dean Bunn
-    Last Edit: 2025-10-31
+    Last Edit: 2025-11-02
 #>
 
 #Custom Object for UC Davis API Information
