@@ -26,6 +26,10 @@ $UCDAPIInfo.test_id = Get-Secret -Name "Rosetta-Test-ID" -AsPlainText -Vault UCD
 if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNullOrEmpty($UCDAPIInfo.client_secret) -eq $false)
 {
 
+    ##########################################
+    #Retreiving OAuth Token
+    ##########################################
+
     #Configure OAuth Header
     $headersOAuthCall = @{"client_id"=$UCDAPIInfo.client_id;
                           "client_secret"=$UCDAPIInfo.client_secret;
@@ -46,12 +50,16 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
         exit;
     }#End of Null\Empty Check on Access Token
 
-    #Var for Account EndPoint Uri with User IAM ID
-    $accountsUri = $UCDAPIInfo.base_url + "accounts?iamid=" + $UCDAPIInfo.test_id;
-
     #Var for Regular EndPoint Headers Calls
     $headersEPCall = @{"Authorization"="Bearer " + $UCDAPIInfo.oauth_token;};
 
+    ########################################
+    #Viewing Accounts Endpoint Information
+    ########################################
+
+    #Var for Account EndPoint Uri with User IAM ID
+    $accountsUri = $UCDAPIInfo.base_url + "accounts?iamid=" + $UCDAPIInfo.test_id;
+ 
     #Make Rest Call to Pull Accounts Information
     $arrAccountInfo = Invoke-RestMethod -Uri $accountsUri -Method GET -Headers $headersEPCall;
 
@@ -73,6 +81,10 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
         }
 
     }#End of Empty Check on $arrAccountInfo
+
+    #########################################
+    # 
+    #########################################
 
 }#End of Null\Empty Checks on Client ID and Secret
 
