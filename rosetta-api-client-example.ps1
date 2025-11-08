@@ -1,7 +1,7 @@
 <#
     Title: rosetta-api-client-example.ps1
     Authors: Dean Bunn and Wilson Miller
-    Last Edit: 2025-11-03
+    Last Edit: 2025-11-07
 #>
 
 #Custom Object for UC Davis API Information
@@ -53,6 +53,7 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     #Var for Regular EndPoint Headers Calls
     $headersEPCall = @{"Authorization"="Bearer " + $UCDAPIInfo.oauth_token;};
 
+    
     ########################################
     #Viewing Accounts Endpoint Information
     ########################################
@@ -83,8 +84,16 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     }#End of Empty Check on $arrAccountInfo
 
     #########################################
-    # 
+    #Viewing People EndPoint Information
     #########################################
+
+    #Var for People Endpoint Uri with User IAM ID
+    $peopleUri = $UCDAPIInfo.base_url + "people?iamid=" + $UCDAPIInfo.test_id;
+
+    #Make Rest Call to Pull People Information
+    $peopleData = Invoke-RestMethod -Uri $peopleUri -Method GET -Headers $headersEPCall;
+
+    Write-Output ($peopleData | ConvertTo-Json).ToString();
 
 }#End of Null\Empty Checks on Client ID and Secret
 
