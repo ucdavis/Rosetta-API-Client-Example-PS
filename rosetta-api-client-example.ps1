@@ -11,7 +11,7 @@ $global:UCDAPIInfo = [PSCustomObject]@{
                                          client_id = ""
                                          client_secret = ""
                                          oauth_token = ""
-                                         test_id = "1000024325"
+                                         test_id = ""
                                        }
 
 
@@ -20,7 +20,7 @@ $UCDAPIInfo.base_url = Get-Secret -Name "Rosetta-Base-Url" -AsPlainText -Vault U
 $UCDAPIInfo.token_url = Get-Secret -Name "Rosetta-OAuth-Url" -AsPlainText -Vault UCD-Identities;
 $UCDAPIInfo.client_id = Get-Secret -Name "Rosetta-Client-ID" -AsPlainText -Vault UCD-Identities;
 $UCDAPIInfo.client_secret = Get-Secret -Name "Rosetta-Client-Secret" -AsPlainText -Vault UCD-Identities;
-#$UCDAPIInfo.test_id = Get-Secret -Name "Rosetta-Test-ID" -AsPlainText -Vault UCD-Identities;
+$UCDAPIInfo.test_id = Get-Secret -Name "Rosetta-Test-ID" -AsPlainText -Vault UCD-Identities;
 
 #Check for Required Client ID and Secret Before Making API Calls
 if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNullOrEmpty($UCDAPIInfo.client_secret) -eq $false)
@@ -34,7 +34,7 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     $headersOAuthCall = @{"client_id"=$UCDAPIInfo.client_id;
                           "client_secret"=$UCDAPIInfo.client_secret;
                           "grant_type"="CLIENT_CREDENTIALS";
-                          "scope"="read:public read:sensitive"
+                          "scope"="read:public"
                          }
 
     #Make Rest Call to Token EndPoint to Get Access Token
@@ -74,34 +74,34 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
         
         #Custom Object for 
         $cstUCDPerson = [PSCustomObject]@{
-                                            iam_id = "";
-                                            displayname = "";
-                                            birth_date = "";
-                                            manager_iam_id = "";
-                                            provisioning_status_primary = "";
-                                            name_lived_first_name = "";
-                                            name_lived_middle_name = "";
-                                            name_lived_last_name = "";
-                                            name_legal_first_name = "";
-                                            name_legal_middle_name = "";
-                                            name_legal_last_name = "";
-                                            id_iam_id = "";
-                                            id_login_id = "";
-                                            id_student_id = "";
-                                            id_mothra_id = "";
-                                            id_employee_id = "";
-                                            id_mail_id = "";
-                                            id_pidm = "";
-                                            email_primary = "";
-                                            email_work = "";
-                                            email_personal = "";
-                                            phone_primary = "";
-                                            phone_personal = "";
-                                            modified_date = "";
-                                            affiliation = @();
-                                            employment_status = @();
-                                            student_association = @();
-                                            payroll_association = @();
+                                            iam_id                      = ""
+                                            displayname                 = ""
+                                            birth_date                  = ""
+                                            manager_iam_id              = ""
+                                            provisioning_status_primary = ""
+                                            name_lived_first_name       = ""
+                                            name_lived_middle_name      = ""
+                                            name_lived_last_name        = ""
+                                            name_legal_first_name       = ""
+                                            name_legal_middle_name      = ""
+                                            name_legal_last_name        = ""
+                                            id_iam_id                   = ""
+                                            id_login_id                 = ""
+                                            id_student_id               = ""
+                                            id_mothra_id                = ""
+                                            id_employee_id              = ""
+                                            id_mail_id                  = ""
+                                            id_pidm                     = ""
+                                            email_primary               = ""
+                                            email_work                  = ""
+                                            email_personal              = ""
+                                            phone_primary               = ""
+                                            phone_personal              = ""
+                                            modified_date               = ""
+                                            affiliation                 = @()
+                                            employment_status           = @()
+                                            student_association         = @()
+                                            payroll_association         = @()
                                         }
 
         #Set IAM ID
@@ -392,7 +392,53 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
 
         }#End of Payroll Association Null Counts
         
+        #Check Student Associations
+        if($null -ne $peopleDatum.student_association -and $peopleDatum.student_association.Length -gt 0)
+        {
 
+            foreach($arrUCDSA in $peopleDatum.student_association)
+            {
+                #Custom Object for Student Association
+                $cstStudentAssoc = [PSCustomObject]@{
+                                                        college         = ""
+                                                        major           = ""
+                                                        academic_level  = ""
+                                                        class_level     = ""
+                                                    };
+
+                foreach($ucdsa in $arrUCDSA)
+                {
+                    #Check College
+                    if($ucdsa.PSObject.Properties.Name -contains 'college')
+                    {
+                        $cstStudentAssoc.college = $ucdsa.PSObject.Properties['college'].Value;
+                    }
+
+                    #Check Major
+                    if($ucdsa.PSObject.Properties.Name -contains 'major')
+                    {
+                        $cstStudentAssoc.major = $ucdsa.PSObject.Properties['major'].Value;
+                    }
+
+                    #Check Academic Level
+                    if($ucdsa.PSObject.Properties.Name -contains 'academic_level')
+                    {
+                        $cstStudentAssoc.academic_level = $ucdsa.PSObject.Properties['academic_level'].Value;
+                    }
+
+                    #Check Class Level
+                    if($ucdsa.PSObject.Properties.Name -contains 'class_level')
+                    {
+                        $cstStudentAssoc.class_level = $ucdsa.PSObject.Properties['class_level'].Value;
+                    }
+
+                }#End of $arrUCDSA
+
+                $cstUCDPerson.student_association += $cstStudentAssoc;
+
+            }#End of Student Association Foreach
+
+        }#End of Student Association Null Count Checks
         
         # Add Custom People Object to Reporting Array
         $arrRptPeople += $cstUCDPerson;
