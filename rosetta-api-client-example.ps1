@@ -1,7 +1,7 @@
 <#
     Title: rosetta-api-client-example.ps1
     Authors: Dean Bunn and Wilson Miller
-    Last Edit: 2026-01-22
+    Last Edit: 2026-03-17
 #>
 
 #Custom Object for UC Davis API Information
@@ -445,7 +445,15 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     }
 
     #Display Report Array
-    $arrRptPeople
+    foreach($rptPep in $arrRptPeople)
+    {
+        $rptPep;
+
+        $rptPep.payroll_association;
+
+        $rptPep.student_association;
+    }
+    
 
 }#End of Null\Empty Checks on Client ID and Secret
 
