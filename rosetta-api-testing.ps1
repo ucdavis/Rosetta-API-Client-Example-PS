@@ -209,6 +209,7 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
                 #Custom Object for Missing Association Information
                 $cstMissingAssoc = [PSCustomObject]@{ iamId = ""
                                                       userID = ""
+                                                      employeeID = ""
                                                       dFullName = ""
                                                       emplPositionNumber = ""
                                                       percentFullTime = ""
@@ -240,6 +241,7 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
                 {
                     $cstMissingAssoc.dFullName = $eiAccntRslt.dFullName;
                     $cstMissingAssoc.userID = $eiAccntRslt.userID;
+                    $cstMissingAssoc.employeeID = $eiAccntRslt.employeeId;
                 }
 
                 # Add Custom Object to Reporting Array
@@ -260,7 +262,7 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     #$arrMissingAssignments | Out-File -FilePath ./missing.txt 
 
     #Missing Assignment Information to CSV
-    $arrMissingAssignments | Select-Object -Property iamId,userID,dFullName,emplPositionNumber,percentFullTime,titleCode,titleDisplayName,deptCode,deptDisplayName,assocStartDate,assocEndDate | Export-Csv -Path ("IAM_Missing_Payroll_Associations_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
+    $arrMissingAssignments | Select-Object -Property iamId,userID,employeeID,dFullName,emplPositionNumber,percentFullTime,titleCode,titleDisplayName,deptCode,deptDisplayName,assocStartDate,assocEndDate | Export-Csv -Path ("IAM_Missing_Payroll_Associations_" + (Get-Date).ToString("yyyy-MM-dd-HH-mm") + ".csv") -NoTypeInformation;
 
 }#End of Client ID and Secret Null\Empty Checks
 
