@@ -1,5 +1,5 @@
 <#
-    Title: rosetta-api-testing.ps1
+    Title: rosetta-api-payroll-testing.ps1
     Authors: Dean Bunn and Wilson Miller
     Last Edit: 2026-03-30
 #>
@@ -73,8 +73,8 @@ if([string]::IsNullOrEmpty($UCDAPIInfo.client_id) -eq $false -and [string]::IsNu
     $htRosettaIAMIDs = @{};
 
     #Array of Department Codes
-    $dptCodes = @("024000","024005","030020","024036","024014","024017","024015","024020","024025","024070","024023","024018","024040")
-    #$dptCodes = @("024000")
+    $dptCodes = @("061000","061001","061002","061004","061015","061024","061027","061031","061500","061510","063004","063007","063016")
+    
 
     foreach($dptCode in $dptCodes)
     {
